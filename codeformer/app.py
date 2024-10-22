@@ -139,7 +139,7 @@ def inference_app(image, background_enhance, face_upsample, upscale, codeformer_
         
         if len(face_detections) <= 2:
             # Sort by confidence score only if more than 2 faces are detected
-            sorted_faces = sorted(face_detections, key=lambda x: x[1], reverse=True)  # Sort by confidence score
+            sorted_faces = sorted(face_detections, key=lambda x: x[4], reverse=True)  # Sort by confidence score
             print("Sorted Face Detections with Confidence Scores:", sorted_faces)
             # Limit to the top two faces with the highest confidence scores
             sorted_faces = sorted_faces[:2]
