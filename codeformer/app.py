@@ -131,6 +131,20 @@ def inference_app(image, background_enhance, face_upsample, upscale, codeformer_
             only_center_face=only_center_face, resize=640, eye_dist_threshold=5
         )
         print(f"\tdetect {num_det_faces} faces")  # Print number of detected faces
+
+        # Get confidence scores and sort the faces based on scores (in descending order)
+        face_detections = face_helper.det_faces  # Assuming face_helper stores detected face scores
+        print("Face Detections:", face_detections)
+        print(type(face_detections))
+        sorted_faces = sorted(face_detections, key=lambda x: x[1], reverse=True)  # Sort by confidence score
+
+        # Limit to the top two faces with the highest confidence scores
+        sorted_faces = sorted_faces[:2]
+        face_helper.det_faces = sorted_faces  # Keep only the top 2 faces
+
+        num_det_faces = len(sorted_faces)
+        print(f'\tdetect {num_det_faces} faces with high confidence')
+        
         # align and warp each face
         face_helper.align_warp_face()
 
