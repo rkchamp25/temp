@@ -92,6 +92,7 @@ def inference_app(image, background_enhance, face_upsample, upscale, codeformer_
     detection_model = "retinaface_resnet50"  # Changed detection model to YOLOv5n
     print("Inp:", type(image), background_enhance, face_upsample, upscale, codeformer_fidelity)
     
+    original_shape = image.shape  # Store original dimensions
     img = image  # Directly use the input image array
     print("\timage size:", img.shape)
 
@@ -130,19 +131,23 @@ def inference_app(image, background_enhance, face_upsample, upscale, codeformer_
         num_det_faces = face_helper.get_face_landmarks_5(
             only_center_face=only_center_face, resize=640, eye_dist_threshold=5
         )
-        print(f"\tdetect {num_det_faces} faces")  # Print number of detected faces
+        print(f"Detected {num_det_faces} faces")  # Print number of detected faces
 
         # Get confidence scores and sort the faces based on scores (in descending order)
         face_detections = face_helper.det_faces  # Assuming face_helper stores detected face scores
         print("Face Detections:", face_detections)
-        print(type(face_detections))
-        sorted_faces = sorted(face_detections, key=lambda x: x[1], reverse=True)  # Sort by confidence score
+        
+        if len(face_detections) <= 2:
+            # Sort by confidence score only if more than 2 faces are detected
+            sorted_faces = sorted(face_detections, key=lambda x: x[1], reverse=True)  # Sort by confidence score
+            print("Sorted Face Detections with Confidence Scores:", sorted_faces)
+            # Limit to the top two faces with the highest confidence scores
+            sorted_faces = sorted_faces[:2]
+            face_helper.det_faces = sorted_faces  # Keep only the top 2 faces
+        else:
+            face_helper.det_faces = face_detections  # Keep all detected faces if 2 or fewer
 
-        # Limit to the top two faces with the highest confidence scores
-        sorted_faces = sorted_faces[:2]
-        face_helper.det_faces = sorted_faces  # Keep only the top 2 faces
-
-        num_det_faces = len(sorted_faces)
+        num_det_faces = len(face_helper.det_faces)
         print(f'\tdetect {num_det_faces} faces with high confidence')
         
         # align and warp each face
@@ -186,5 +191,8 @@ def inference_app(image, background_enhance, face_upsample, upscale, codeformer_
             )
         else:
             restored_img = face_helper.paste_faces_to_input_image(upsample_img=bg_img, draw_box=draw_box)
-            
+
+    # Resize restored image to original dimensions
+    restored_img = cv2.resize(restored_img, (original_shape[1], original_shape[0]), interpolation=cv2.INTER_LINEAR)
+    
     return restored_img
