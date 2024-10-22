@@ -14,7 +14,7 @@ from codeformer.facelib.utils.misc import is_gray
 
 pretrain_model_url = {
     "codeformer": "https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/codeformer.pth",
-    "detection": "https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/yolov5n-face.pth",
+    "detection": "https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/detection_Resnet50_Final.pth",
     "parsing": "https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/parsing_parsenet.pth",
     "realesrgan": "https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/RealESRGAN_x2plus.pth",
 }
@@ -89,7 +89,7 @@ def inference_app(image, background_enhance, face_upsample, upscale, codeformer_
     has_aligned = False
     only_center_face = False
     draw_box = False
-    detection_model = "YOLOv5n"  # Changed detection model to YOLOv5n
+    detection_model = "retinaface_resnet50"  # Changed detection model to YOLOv5n
     print("Inp:", type(image), background_enhance, face_upsample, upscale, codeformer_fidelity)
     
     img = image  # Directly use the input image array
