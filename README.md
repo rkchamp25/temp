@@ -16,22 +16,14 @@ pip install codeformer-pip
 from codeformer.app import inference_app
 
 inference_app(
-  image="test.jpg",
+  image="3d array of image",
   background_enhance=True,
   face_upsample=True,
   upscale=2,
   codeformer_fidelity=0.5,
 )
 ```
-### Citation
-```bibtex
-@inproceedings{zhou2022codeformer,
-    author = {Zhou, Shangchen and Chan, Kelvin C.K. and Li, Chongyi and Loy, Chen Change},
-    title = {Towards Robust Blind Face Restoration with Codebook Lookup TransFormer},
-    booktitle = {NeurIPS},
-    year = {2022}
-}
-```
+
 
 ### License
 
